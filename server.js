@@ -10,7 +10,8 @@ const port = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("/var/www/uploads"));
 
 require("./model/config.js");
 
