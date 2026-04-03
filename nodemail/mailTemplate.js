@@ -73,7 +73,7 @@ const Verification_Email_Template = `
            
           </div>
           <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Your Company. All rights reserved.</p>
+              <p>© ${new Date().getFullYear()} 2026 Wisemanage. All rights reserved.</p>
           </div>
       </div>
   </body>
