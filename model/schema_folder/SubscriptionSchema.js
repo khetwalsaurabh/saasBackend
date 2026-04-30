@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 
-
 const SubscriptionSchema = new mongoose.Schema({
 
   hotelId: {

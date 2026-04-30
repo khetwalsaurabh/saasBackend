@@ -7,10 +7,8 @@ const checkSubscription = async (req, res, next) => {
     const { hotelId } = req.user;
 
     const subscription = await Subscription.findOne({
-
       hotelId,
       status: "active"
-
     });
 
     if (!subscription) {
@@ -29,13 +27,10 @@ const checkSubscription = async (req, res, next) => {
     if (today > subscription.endDate) {
 
       subscription.status = "expired";
-
       await subscription.save();
-
       return res.status(403).json({
-
         message: "Plan expired. Please renew."
-
+        
       });
 
     }

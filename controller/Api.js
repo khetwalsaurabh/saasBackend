@@ -16,6 +16,8 @@ const razorpay = require("../Razorpay/razorpay");
 const crypto = require("crypto");
 
 
+
+
 const CreateAccountApi = async (req, res) => {
   try {
 
@@ -1017,37 +1019,6 @@ const DeleteTariffApi = async (req, res) => {
 };
 
 // Room api
-// const AddRoomApi = async (req, res) => {
-//   try {
-
-//     const { hotelId } = req.user;
-
-//     const room = new AddRoomSchema({
-//       ...req.body,
-//       hotelId,
-//       roomStatus: "available"
-//     });
-
-//     await room.save();
-
-//     res.status(200).json(room);
-
-//   } catch (err) {
-
-//     console.log(err);
-
-//     if (err.code === 11000) {
-//       return res.status(400).json({
-//         message: "Room number already exists"
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: "Internal server error"
-//     });
-
-//   }
-// };
 
 const AddRoomApi = async (req, res) => {
   try {
@@ -1290,44 +1261,6 @@ const DeleteRoomApi = async (req, res) => {
 
   }
 };
-
-// room(Type&price) api
-// const addRoomTypeorPrice = async (req, res) => {
-//   try {
-
-//      console.log("req.user:", req.user);
-
-//     const { hotelId } = req.user;
-
-//     const type = new RoomTypeSchema({
-//       ...req.body,
-//       hotelId
-//     });
-
-//     await type.save();
-
-//     // res.status(201).json(type);
-
-//      res.status(201).json({
-//       success: true,
-//       message: "Room type added successfully.",
-//       data: type
-//     });
-
-//   } catch (err) {
-
-//     // res.status(500).json({
-//     //   message: "Error adding type"
-//     // });
-
-//     console.error("addRoomTypeorPrice error:", err);
-//     res.status(500).json({
-//       success: false,
-//       message: "Error adding room type."
-//     });
-
-//   }
-// };
 
 
 const addRoomTypeorPrice = async (req, res) => {
@@ -1968,20 +1901,6 @@ const verifyPayment = async (req, res) => {
       endDate.getDate() + 30
     );
 
-    // save subscription
-    // example
-    /*
-    await Subscription.create({
-      hotelId,
-      planName,
-      price,
-      roomLimit,
-      paymentId: razorpay_payment_id,
-      startDate,
-      endDate
-    })
-    */
-
     res.json({
       success: true
     });
@@ -1996,7 +1915,146 @@ const verifyPayment = async (req, res) => {
 
 };
 
+// ==================================
+const { Parser } = require("json2csv");
 
+const exportGuestHistory = async (req, res) => {
+  try {
+    const { search = "" } = req.query;
+
+    // 🔍 Search filter
+    const query = search
+      ? {
+        $or: [
+          { guestName: { $regex: search, $options: "i" } },
+          { mobile: { $regex: search, $options: "i" } },
+          { roomNumber: { $regex: search, $options: "i" } },
+        ],
+      }
+      : {};
+
+    // 🚀 Fetch ALL data (no pagination)
+    const data = await CheckoutScheama.find(query).lean();
+
+    if (!data.length) {
+      return res.status(404).json({ message: "No data found" });
+    }
+
+    // 🧾 Format fields (important)
+    // const formatted = data.map((item) => ({
+    //   "Guest Name": item.guestName,
+    //   "Room No": item.roomNumber,
+    //   "Room Type": item.roomType,
+    //   Mobile: item.mobile,
+    //   "Check-in": item.checkinDate,
+    //   "Check-out": item.checkoutDate,
+    //   "Food Total": item.food,
+    // }));
+
+    const formatted = data.map((item) => ({
+      "Guest Name": item.guestName,
+      "Mobile": item.mobile,
+      "Email": item.email,
+      "Address": item.address,
+      "Coming From": item.comingFrom,
+      "Room No": item.roomNumber,
+      "Room Type": item.roomType,
+      "Check-in Date": item.checkinDate,
+      "Check-in Time": item.checkinTime,
+      "Check-out Date": item.checkoutDate,
+      "Check-out Time": item.checkoutTime,
+      "Adults": item.adults,
+      "Payment By": item.paymentBy,
+      "Payment Mode": item.paymentmode,
+      "Company Name": item.companyName,
+      "Company Tariff": item.companyTariff,
+      "Lodging": item.Lodging,
+      "Food Total": item.food,
+      "Laundry": item.Laundry,
+      "Extra Person": item.extraPerson,
+      "Telephone": item.telephoneCalls,
+      "Advance Payment": item.advancepayment,
+      "GST No": item.customerGstNo,
+    }));
+
+    const fields = Object.keys(formatted[0]).map((key) => ({
+  label: key,
+  value: key,
+}));
+
+const parser = new Parser({ fields }); // use it here
+
+    // 📄 Convert to CSV
+    // const parser = new Parser();
+
+    const csv = parser.parse(formatted);
+
+    // 📥 Send as downloadable file
+    res.header("Content-Type", "text/csv");
+    res.attachment("guest_history.csv");
+    return res.send(csv);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Export failed" });
+  }
+};
+
+
+
+const exportSingleGuest = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const item = await CheckoutScheama.findById(id).lean();
+
+    if (!item) {
+      return res.status(404).json({ message: "Guest not found" });
+    }
+
+    // ✅ Full data (same as your form)
+    const formatted = [
+      {
+        "Guest Name": item.guestName,
+        "Mobile": item.mobile,
+        "Email": item.email,
+        "Address": item.address,
+        "Coming From": item.comingFrom,
+        "Room No": item.roomNumber,
+        "Room Type": item.roomType,
+        "Check-in Date": item.checkinDate,
+        "Check-in Time": item.checkinTime,
+        "Check-out Date": item.checkoutDate,
+        "Check-out Time": item.checkoutTime,
+        "Adults": item.adults,
+        "Payment By": item.paymentBy,
+        "Payment Mode": item.paymentmode,
+        "Company Name": item.companyName,
+        "Company Tariff": item.companyTariff,
+        "Lodging": item.Lodging,
+        "Food Total": item.food,
+        "Laundry": item.Laundry,
+        "Extra Person": item.extraPerson,
+        "Telephone": item.telephoneCalls,
+        "Advance Payment": item.advancepayment,
+        "GST No": item.customerGstNo,
+      },
+    ];
+
+    const parser = new Parser();
+    const csv = parser.parse(formatted);
+
+    res.header("Content-Type", "text/csv");
+    res.attachment(`${item.guestName || "guest"}.csv`);
+    res.send(csv);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// ==========================================
 
 
 
@@ -2006,5 +2064,5 @@ module.exports = {
   AddRoomApi, GetRoomApi, UpdateRoomStatus, EditRoom, addRoomTypeorPrice, EditTariffApi, DeleteTariffApi, EditRoomTypeOrPrice, DeleteRoomTypeOrPrice, GetTariffByIDforEdit,
   GetforEditRoomTypeOrPrice, DeleteRoomApi, AddFoodApi, GetFoodApi, GetFoodByBooking, AddLundaryApi, GetLaundary, GetLaundaryByBooking, GetroomTypeorpriceWithoutPage, GetBillingSummary, AddInvoicePostAPI,
   GetInvoiceSetting, CreateAccountApi, LoginUser, CreateOrUpdateSubscription, GetHotelInfo, GetSubscribtion, EditInvoice, VerifyOtpApi, SendOtpForgetPassword, VerifyOtpForgetPassword, ResetPassword, CreateOrder,
-  verifyPayment
+  verifyPayment, exportGuestHistory, exportSingleGuest
 };
