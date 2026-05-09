@@ -1,5 +1,5 @@
 const express = require("express");
-const { Addbooking, Getbooking, EditBooking, getBookingForEditById, deleteBooking, CheckoutPostapi, Finalcheckoutgetapi, AddTariffApi, GetTariffApi, AddRoomApi, GetRoomApi, UpdateRoomStatus, EditRoom, addRoomTypeorPrice, EditTariffApi, DeleteTariffApi, EditRoomTypeOrPrice, DeleteRoomTypeOrPrice, GetTariffByIDforEdit, GetforEditRoomTypeOrPrice, DeleteRoomApi, AddFoodApi, GetFoodApi, GetFoodByBooking, AddLundaryApi, GetLaundary, GetLaundaryByBooking, GetroomTypeorpriceWithoutPage, GetBillingSummary, AddInvoicePostAPI, GetInvoiceSetting, CreateAccountApi, LoginUser, CreateOrUpdateSubscription, GetHotelInfo, GetSubscribtion, EditInvoice, VerifyOtpApi, SendOtpForgetPassword, VerifyOtpForgetPassword, ResetPassword, CreateOrder, verifyPayment, exportGuestHistory, exportSingleGuest } = require("../controller/Api.js");
+const { Addbooking, Getbooking, EditBooking, getBookingForEditById, deleteBooking, CheckoutPostapi, Finalcheckoutgetapi, AddTariffApi, GetTariffApi, AddRoomApi, GetRoomApi, UpdateRoomStatus, EditRoom, addRoomTypeorPrice, EditTariffApi, DeleteTariffApi, EditRoomTypeOrPrice, DeleteRoomTypeOrPrice, GetTariffByIDforEdit, GetforEditRoomTypeOrPrice, DeleteRoomApi, AddFoodApi, GetFoodApi, GetFoodByBooking, AddLundaryApi, GetLaundary, GetLaundaryByBooking, GetroomTypeorpriceWithoutPage, GetBillingSummary, AddInvoicePostAPI, GetInvoiceSetting, CreateAccountApi, LoginUser, CreateOrUpdateSubscription, GetHotelInfo, GetSubscribtion, EditInvoice, VerifyOtpApi, SendOtpForgetPassword, VerifyOtpForgetPassword, ResetPassword, CreateOrder, verifyPayment, exportGuestHistory, exportSingleGuest, RoomOccupancy, RevenueReport } = require("../controller/Api.js");
 const authMiddleware = require("../middleware/authMiddleware.js");
 const checkSubscription = require("../middleware/checkSubscription.js");
 const upload = require("../Multer/upload.js");
@@ -84,6 +84,14 @@ router.post("/verify-payment", verifyPayment);
 router.get("/export-guest-history", exportGuestHistory);
 router.get("/export-guest/:id", exportSingleGuest);
 
+// occupam=ncy report
+router.post("/room-occupancy", authMiddleware, RoomOccupancy);
+
+router.post(
+    "/revenue-report",
+    authMiddleware,
+    RevenueReport
+);
 
 
 module.exports = router;
