@@ -290,12 +290,6 @@ const Addbooking = async (req, res) => {
     });
     await booking.save();
 
-    // UPDATE ROOM STATUS TO OCCUPIED
-    // await AddRoomSchema.updateOne(
-    //   { roomNumber: req.body.roomNumber },
-    //   { $set: { roomStatus: "occupied" } }
-    // );
-
     await AddRoomSchema.findOneAndUpdate(
       {
         roomNumber: Number(req.body.roomNumber),
@@ -1939,17 +1933,6 @@ const exportGuestHistory = async (req, res) => {
     if (!data.length) {
       return res.status(404).json({ message: "No data found" });
     }
-
-    // 🧾 Format fields (important)
-    // const formatted = data.map((item) => ({
-    //   "Guest Name": item.guestName,
-    //   "Room No": item.roomNumber,
-    //   "Room Type": item.roomType,
-    //   Mobile: item.mobile,
-    //   "Check-in": item.checkinDate,
-    //   "Check-out": item.checkoutDate,
-    //   "Food Total": item.food,
-    // }));
 
     const formatted = data.map((item) => ({
       "Guest Name": item.guestName,

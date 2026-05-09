@@ -24,7 +24,7 @@ const CheckoutSchema = new mongoose.Schema(
 
     comingFrom: { type: String, default: "" },
 
-    checkinDate: { type: String, required: true },
+    checkinDate: { type: Date, required: true },
 
     checkinTime: { type: String, required: true },
 
@@ -40,7 +40,7 @@ const CheckoutSchema = new mongoose.Schema(
 
     adults: { type: Number, required: true },
 
-    checkoutDate: { type: String, required: true },
+    checkoutDate: { type: Date, required: true },
 
     checkoutTime: { type: String, required: true },
 

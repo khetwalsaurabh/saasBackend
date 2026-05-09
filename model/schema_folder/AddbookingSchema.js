@@ -39,7 +39,7 @@ const AddbookingSchema = new mongoose.Schema(
     },
 
     checkinDate: {
-      type: String,
+      type: Date,
       required: true,
     },
 
