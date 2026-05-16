@@ -132,14 +132,14 @@ const LoginUser = async (req, res) => {
 
     const { email, password } = req.body;
 
-    const errorMsg = "Auth failed: email or password is wrong";
+    // const errorMsg = "Auth failed: email or password is wrong";
 
     const user = await CreateAccountSchema.findOne({ email });
 
     if (!user) {
       return res.status(403).json({
         success: false,
-        message: errorMsg
+        message: "Email not found"
       });
     }
 
@@ -148,7 +148,7 @@ const LoginUser = async (req, res) => {
     if (!isPassEqual) {
       return res.status(403).json({
         success: false,
-        message: errorMsg
+        message: "Incorrect password"
       });
     }
 
