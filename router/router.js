@@ -2,7 +2,7 @@ const express = require("express");
 const { Addbooking, Getbooking, EditBooking, getBookingForEditById, deleteBooking, CheckoutPostapi, Finalcheckoutgetapi, AddTariffApi, GetTariffApi, AddRoomApi, GetRoomApi, UpdateRoomStatus, EditRoom, addRoomTypeorPrice, EditTariffApi, DeleteTariffApi, EditRoomTypeOrPrice, DeleteRoomTypeOrPrice, GetTariffByIDforEdit, GetforEditRoomTypeOrPrice, DeleteRoomApi, AddFoodApi, GetFoodApi, GetFoodByBooking, AddLundaryApi, GetLaundary, GetLaundaryByBooking, GetroomTypeorpriceWithoutPage, GetBillingSummary, AddInvoicePostAPI, GetInvoiceSetting, CreateAccountApi, LoginUser, CreateOrUpdateSubscription, GetHotelInfo, GetSubscribtion, EditInvoice, VerifyOtpApi, SendOtpForgetPassword, VerifyOtpForgetPassword, ResetPassword, CreateOrder, verifyPayment, exportGuestHistory, exportSingleGuest, RoomOccupancy, RevenueReport } = require("../controller/Api.js");
 const authMiddleware = require("../middleware/authMiddleware.js");
 const checkSubscription = require("../middleware/checkSubscription.js");
-const upload = require("../Multer/upload.js");
+const { upload } = require("../Multer/upload.js");
 
 const router = express.Router();
 
